@@ -1,0 +1,57 @@
+/* Navbar background gradient */
+.custom-navbar {
+  background: linear-gradient(90deg, #4b6cb7, #182848);
+  transition: background 0.3s ease-in-out;
+}
+
+.custom-navbar .navbar-brand {
+  font-weight: 700;
+  font-size: 1.5rem;
+  transition: transform 0.3s;
+}
+
+.custom-navbar .navbar-brand:hover {
+  transform: scale(1.05);
+}
+
+/* Nav links */
+.custom-navbar .nav-link {
+  color: #ffffff;
+  font-weight: 500;
+  margin-left: 1rem;
+  transition: color 0.3s, transform 0.2s;
+}
+
+.custom-navbar .nav-link:hover {
+  color: #ffd700;
+  transform: translateY(-2px);
+}
+
+/* Active link styling */
+.custom-navbar .nav-link.active {
+  color: #ffd700;
+  font-weight: 600;
+  border-bottom: 2px solid #ffd700;
+}
+
+/* Navbar toggler */
+.navbar-toggler {
+  border: none;
+}
+
+.navbar-toggler-icon {
+  filter: invert(1);
+}
+
+/* Shadow and hover effect */
+.custom-navbar {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .custom-navbar .nav-link {
+    margin-left: 0;
+    margin-top: 0.5rem;
+  }
+}
