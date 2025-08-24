@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-// Hardcoded backend URL
-const BASE_URL = "https://digital-wallet-system-backend-prg5.onrender.com";
+// Backend URL from environment variable
+const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 function CustomerAuth() {
   const [customer, setCustomer] = useState({

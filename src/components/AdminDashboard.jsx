@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-// Hardcoded Render backend URL
-const BASE_URL = "https://digital-wallet-system-backend-prg5.onrender.com";
+// Use environment variable
+const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 function AdminDashboard() {
   const [customers, setCustomers] = useState([]);

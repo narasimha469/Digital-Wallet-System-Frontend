@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-// Render backend URL
-const BASE_URL = "https://digital-wallet-system-backend-prg5.onrender.com";
+// Backend URL from environment variable
+const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 function UpdateCustomerForm() {
     const customerId = localStorage.getItem("customerId");
@@ -39,6 +39,7 @@ function UpdateCustomerForm() {
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
+        setMessage("");
     };
 
     const handleSubmit = async (e) => {

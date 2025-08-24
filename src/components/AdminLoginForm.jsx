@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-// Render backend URL
-const BASE_URL = "https://digital-wallet-system-backend-prg5.onrender.com";
+// Backend URL from environment variable
+const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 function AdminLoginForm() {
     const [admin, setAdmin] = useState({ username: "", password: "" });
@@ -18,13 +18,8 @@ function AdminLoginForm() {
 
     const validate = () => {
         let textError = {};
-
-        if (!admin.username.trim()) {
-            textError.username = "Enter username";
-        }
-        if (!admin.password.trim()) {
-            textError.password = "Enter password";
-        }
+        if (!admin.username.trim()) textError.username = "Enter username";
+        if (!admin.password.trim()) textError.password = "Enter password";
 
         setError(textError);
         return Object.keys(textError).length === 0;
@@ -33,26 +28,26 @@ function AdminLoginForm() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setSuccess("");
-        if (validate()) {
-            try {
-                const res = await fetch(`${BASE_URL}/digitalWalletSystem/admin/login`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(admin),
-                });
+        if (!validate()) return;
 
-                if (res.ok) {
-                    const data = await res.text();
-                    setSuccess(data || "Login successful!");
-                    setAdmin({ username: "", password: "" });
-                    navigate("/admindashboard"); // Navigate after successful login
-                } else {
-                    const data = await res.text();
-                    setError({ general: data || "Invalid username or password" });
-                }
-            } catch (err) {
-                setError({ general: "Server error. Try again later." });
+        try {
+            const res = await fetch(`${BASE_URL}/digitalWalletSystem/admin/login`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(admin),
+            });
+
+            if (res.ok) {
+                const data = await res.text();
+                setSuccess(data || "Login successful!");
+                setAdmin({ username: "", password: "" });
+                navigate("/admindashboard"); // Navigate after successful login
+            } else {
+                const data = await res.text();
+                setError({ general: data || "Invalid username or password" });
             }
+        } catch (err) {
+            setError({ general: "Server error. Try again later." });
         }
     };
 
@@ -61,6 +56,7 @@ function AdminLoginForm() {
             <form className="card card-style p-4 mt-5" onSubmit={handleSubmit}>
                 {error.general && <p className='text-danger text-center fs-20'>{error.general}</p>}
                 {success && <p className='text-success text-center fs-20'>{success}</p>}
+
                 <h2 className="text-center">Admin Login</h2>
 
                 <div className="form-group mb-2">
@@ -68,7 +64,7 @@ function AdminLoginForm() {
                     <input
                         type="text"
                         className="form-control"
-                        placeholder='enter the username'
+                        placeholder='Enter the username'
                         name="username"
                         id="username"
                         value={admin.username}
@@ -82,7 +78,7 @@ function AdminLoginForm() {
                     <input
                         type="password"
                         className="form-control"
-                        placeholder='enter the password'
+                        placeholder='Enter the password'
                         name="password"
                         id="password"
                         value={admin.password}

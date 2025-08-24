@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-// Render backend URL
-const BASE_URL = "https://digital-wallet-system-backend-prg5.onrender.com";
+// Backend URL from environment variable
+const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 function ForgotPassword() {
     const [formData, setFormData] = useState({ email: "", newPassword: "" });
@@ -12,6 +12,7 @@ function ForgotPassword() {
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
         setError({ ...error, [e.target.name]: "" }); 
+        setSuccess("");
     };
 
     const validate = () => {
@@ -28,7 +29,6 @@ function ForgotPassword() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setSuccess("");
         if (!validate()) return;
 
         try {

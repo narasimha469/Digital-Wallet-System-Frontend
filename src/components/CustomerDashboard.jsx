@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-// Render backend URL
-const BASE_URL = "https://digital-wallet-system-backend-prg5.onrender.com";
+// Backend URL from environment variable
+const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 function CustomerDashboard() {
   const [customer, setCustomer] = useState(null);
@@ -32,10 +32,8 @@ function CustomerDashboard() {
       if (!resCustomer.ok) throw new Error("Customer not found");
 
       const dataCustomer = await resCustomer.json();
-      console.log("Customer Data:", dataCustomer);
       setCustomer(dataCustomer);
 
-      // Wallet check
       if (dataCustomer.wallet && dataCustomer.wallet.walletId) {
         setWallet(dataCustomer.wallet);
 
@@ -44,7 +42,6 @@ function CustomerDashboard() {
         );
         if (resTransactions.ok) {
           const dataTransactions = await resTransactions.json();
-          console.log("Transactions:", dataTransactions);
           setTransactions(dataTransactions);
         } else {
           setTransactions([]);
@@ -133,7 +130,6 @@ function CustomerDashboard() {
 
   useEffect(() => {
     fetchDashboard();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [customerId]);
 
   if (!customer) {

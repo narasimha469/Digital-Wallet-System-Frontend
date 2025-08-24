@@ -1,4 +1,10 @@
+import { useNavigate } from "react-router-dom";
+
 function HomePage() {
+  let navigate = useNavigate();
+  const handleClick = ()=>{
+    navigate("/customerAuth")
+  }
   return (
     <div className="container mt-5 ">
       <div className="row align-items-center ">
@@ -19,7 +25,7 @@ function HomePage() {
             this project ensures a clean UI, robust functionality, 
             and smooth performance across devices.
           </p>
-          <button className="btn btn-primary btn-lg mt-2 shadow-sm">
+          <button className="btn btn-primary btn-lg mt-2 shadow-sm" onClick={handleClick}>
             Get Started 🚀
           </button>
         </div>
