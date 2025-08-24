@@ -68,7 +68,7 @@ function CustomerDashboard() {
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(Number(amount)),
+          body: JSON.stringify(Number(amount)), // numeric JSON
         }
       );
 
@@ -100,7 +100,7 @@ function CustomerDashboard() {
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(Number(amount)),
+          body: JSON.stringify(Number(amount)), // numeric JSON
         }
       );
 
