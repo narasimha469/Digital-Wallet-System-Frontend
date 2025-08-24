@@ -6,7 +6,7 @@ const BASE_URL = "https://digital-wallet-system-backend-prg5.onrender.com";
 
 function CustomerDashboard() {
   const [customer, setCustomer] = useState(null);
-  const [wallet, setWallet] = useState(null);
+  const [wallet, setWallet] = useState({ walletId: "N/A", balance: 0 });
   const [transactions, setTransactions] = useState([]);
   const [amount, setAmount] = useState("");
   const [message, setMessage] = useState("");
@@ -15,15 +15,27 @@ function CustomerDashboard() {
   const navigate = useNavigate();
   const customerId = localStorage.getItem("customerId");
 
+  // Redirect if not logged in
+  useEffect(() => {
+    if (!customerId) {
+      navigate("/customerAuth");
+    }
+  }, [customerId, navigate]);
+
   const fetchDashboard = async () => {
     if (!customerId) return;
 
     try {
-      const resCustomer = await fetch(`${BASE_URL}/digitalWalletSystem/customers/${customerId}`);
+      const resCustomer = await fetch(
+        `${BASE_URL}/digitalWalletSystem/customers/${customerId}`
+      );
       if (!resCustomer.ok) throw new Error("Customer not found");
+
       const dataCustomer = await resCustomer.json();
+      console.log("Customer Data:", dataCustomer);
       setCustomer(dataCustomer);
 
+      // Wallet check
       if (dataCustomer.wallet && dataCustomer.wallet.walletId) {
         setWallet(dataCustomer.wallet);
 
@@ -32,10 +44,14 @@ function CustomerDashboard() {
         );
         if (resTransactions.ok) {
           const dataTransactions = await resTransactions.json();
+          console.log("Transactions:", dataTransactions);
           setTransactions(dataTransactions);
         } else {
           setTransactions([]);
         }
+      } else {
+        setWallet({ walletId: "N/A", balance: 0 });
+        setTransactions([]);
       }
     } catch (err) {
       setMessage(err.message || "Error loading dashboard");
@@ -50,11 +66,14 @@ function CustomerDashboard() {
       return;
     }
     try {
-      const res = await fetch(`${BASE_URL}/digitalWalletSystem/wallets/add/${customerId}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(Number(amount)),
-      });
+      const res = await fetch(
+        `${BASE_URL}/digitalWalletSystem/wallets/add/${customerId}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(Number(amount)),
+        }
+      );
 
       if (res.ok) {
         setMessage("Amount added successfully");
@@ -79,11 +98,14 @@ function CustomerDashboard() {
       return;
     }
     try {
-      const res = await fetch(`${BASE_URL}/digitalWalletSystem/wallets/deduct/${customerId}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(Number(amount)),
-      });
+      const res = await fetch(
+        `${BASE_URL}/digitalWalletSystem/wallets/deduct/${customerId}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(Number(amount)),
+        }
+      );
 
       if (res.ok) {
         setMessage("Amount deducted successfully");
@@ -104,16 +126,23 @@ function CustomerDashboard() {
   const handleLogout = () => {
     localStorage.removeItem("customerId");
     setCustomer(null);
-    setWallet(null);
+    setWallet({ walletId: "N/A", balance: 0 });
     setTransactions([]);
     navigate("/customerAuth");
   };
 
   useEffect(() => {
     fetchDashboard();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [customerId]);
 
-  if (!customer) return <p className="text-center mt-5">Loading...</p>;
+  if (!customer) {
+    return (
+      <p className="text-center mt-5">
+        {messageType === "error" ? message : "Loading..."}
+      </p>
+    );
+  }
 
   return (
     <div className="container mt-4">
@@ -187,7 +216,11 @@ function CustomerDashboard() {
                   <td>{t.transactionType}</td>
                   <td>{t.amount}</td>
                   <td>{t.status}</td>
-                  <td>{t.transactionTime}</td>
+                  <td>
+                    {t.transactionTime
+                      ? new Date(t.transactionTime).toLocaleString()
+                      : "-"}
+                  </td>
                 </tr>
               ))
             ) : (
